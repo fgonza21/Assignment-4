@@ -66,13 +66,13 @@ double max_lbl_width(char **str, int numstrs){
 		max_width = (pl_flabelwidth(str[i])>max_width) ? pl_flabelwidth(str[i]) : max_width;
 	return max_width;
 }
-void draw_rect(int rides, int month, char *mnth)
+void draw_rect(int rides, int inc, char *mnth)
 {
     pl_contrel(0, 0);
-    int coord_start = (month - 1) * 500;
+    int coord_start = (inc - 1) * 500;
     int coord_end = coord_start + 500;
  
-    if (month > MONTHS || month < 1){
+    if (inc > INCREMENTS || inc < 1){
         fprintf (stderr, "Data includes invalid values\n");
 	exit(0);
     }
@@ -95,19 +95,37 @@ int power_ten(int intgr){
 	while(intgr>i)
 		i*=10;
 }
-int make_hist(int data[], int numdata)
+int make_hist(int data[], int numdata,char *flag)
 {
     //int r_pm[12] = {1234, 1234, 2356, 2345, 5476, 67856, 3456, 34563, 7845, 8456, 3456, 74345};
     char *m[12] = {"Jan.","Feb.","Mar.","Apr.","May","Jun.","Jul.","Aug.","Sep.","Oct.","Nov.","Dec."};  
-    char *d[24];
+    char *h[24] = {"1:00","2:00","3:00","4:00","5:00","6:00","7:00","8:00","9:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00","24:00"};
+    char *d[31]={"1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31"};
     char *year;
+    char **inc;
     int handle;
     int i;
+    if(strcmp(flag,"month")==0){
+	inc = d;
+        INCREMENTS = 31;
+    }
+    else if(strcmp(flag,"day")==0){
+ 	inc = h;
+        INCREMENTS = 24; 
+    }
+   else if(strcmp(flag,"year")==0){
+	inc = m;
+        INCREMENTS = 12;
+    }
+   else{
+	fprintf(stderr, "Invalid flag.\n\n");
+	exit(0);
+    }
     /* set a Plotter parameter */
     pl_parampl ("PAGESIZE", "letter");
     pl_parampl ("BITMAPSIZE", "10000x100000");
     pl_parampl("GIF_ITERATIONS", "0");
-    pl_parampl("BG_COLOR", "cyan");
+    pl_parampl("BG_COLOR", "Mint Cream");
    // pl_parampl("GIF_DELAY","5");    
     /* create a Postscript Plotter that writes to standard output */
     FILE *file=fopen("divvy.gif","w");
@@ -125,14 +143,15 @@ int make_hist(int data[], int numdata)
      // double shift=max_lbl_width(m,12);
     pl_fspace (-5000.0, -5000.0,25000.0, 25000.0); /* specify user coor system */
     pl_flinewidth (0.25);       /* line thickness in user coordinates */
-    pl_pencolorname ("red");    /* path will be drawn in red */
+    pl_pencolorname ("black");    /* path will be drawn in red */
     pl_fmove (0.0, 0.0);    /* position the graphics cursor */
+    pl_fillcolorname("Powder Blue");
     for(int j=100;j>0;j-=5){
     	pl_erase();
-    	for(int i = 0; i < MONTHS; i++){
-	    draw_rect(data[i]/j, i + 1,m[i]);
+    	for(int i = 0; i < INCREMENTS; i++){
+	    draw_rect(data[i]/j, i + 1,inc[i]);
     	}
-        dump_stat_box(data,12);
+        //dump_stat_box(data,INCREMENTS);
     }
     if (pl_closepl () < 0)      /* close Plotter */
     {
