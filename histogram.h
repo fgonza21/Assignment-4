@@ -6,4 +6,4 @@
 #include <time.h>
 //#include "htst.h"
 
-int make_hist(int data[], int numdata, char *flag);
+int make_hist(int data[], int numdata);

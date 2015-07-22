@@ -68,11 +68,12 @@ double max_lbl_width(char **str, int numstrs){
 }
 void draw_rect(int rides, int inc, char *mnth)
 {
+    //int increments = 0;
     pl_contrel(0, 0);
     int coord_start = (inc - 1) * 500;
     int coord_end = coord_start + 500;
  
-    if (inc > INCREMENTS || inc < 1){
+    if (inc > 31 || inc < 1){
         fprintf (stderr, "Data includes invalid values\n");
 	exit(0);
     }
@@ -95,9 +96,9 @@ int power_ten(int intgr){
 	while(intgr>i)
 		i*=10;
 }
-int make_hist(int data[], int numdata,char *flag)
+int make_hist(int data[], int numdata)
 {
-    //int r_pm[12] = {1234, 1234, 2356, 2345, 5476, 67856, 3456, 34563, 7845, 8456, 3456, 74345};
+    //int increments = 0;
     char *m[12] = {"Jan.","Feb.","Mar.","Apr.","May","Jun.","Jul.","Aug.","Sep.","Oct.","Nov.","Dec."};  
     char *h[24] = {"1:00","2:00","3:00","4:00","5:00","6:00","7:00","8:00","9:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00","24:00"};
     char *d[31]={"1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31"};
@@ -105,17 +106,17 @@ int make_hist(int data[], int numdata,char *flag)
     char **inc;
     int handle;
     int i;
-    if(strcmp(flag,"month")==0){
+    if(numdata > 24){
 	inc = d;
-        INCREMENTS = 31;
+        //increments = 31;
     }
-    else if(strcmp(flag,"day")==0){
+    else if(numdata == 24){
  	inc = h;
-        INCREMENTS = 24; 
+        //increments = 24; 
     }
-   else if(strcmp(flag,"year")==0){
+   else if(numdata == 12){
 	inc = m;
-        INCREMENTS = 12;
+        //increments = 12;
     }
    else{
 	fprintf(stderr, "Invalid flag.\n\n");
@@ -148,7 +149,7 @@ int make_hist(int data[], int numdata,char *flag)
     pl_fillcolorname("Powder Blue");
     for(int j=100;j>0;j-=5){
     	pl_erase();
-    	for(int i = 0; i < INCREMENTS; i++){
+    	for(int i = 0; i < numdata; i++){
 	    draw_rect(data[i]/j, i + 1,inc[i]);
     	}
         //dump_stat_box(data,INCREMENTS);

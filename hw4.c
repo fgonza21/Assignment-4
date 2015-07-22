@@ -117,8 +117,8 @@ int main(void){
 	  exit(0);
 	}
 	read_by_day(data_file, data, month, day, year);
-  	count_nodes(data, counts, len);
-	make_hist(counts, len);
+  	//count_nodes(data, counts, len);
+	//make_hist(counts, len);
 }
   
   if(!strcmp(analysis, "month")){
