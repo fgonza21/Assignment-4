@@ -13,13 +13,13 @@ typedef struct{
 
 LIST *list_create();
 
-void print_lst( LIST* list);
+//void print_lst( LIST* list);
 
 void list_free(LIST *list);
 
 void add_node( LIST* list , int val_month, int val_day, int val_year, int val_hour);
 
-void count_node( LIST *list , int *count_array , char* type);
+void count_nodes( LIST *list , int *count_array , int type);
 
 void free_node( NODE *node);
 

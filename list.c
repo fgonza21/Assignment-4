@@ -3,11 +3,9 @@
 #include <string.h>
 #include "list.h"
 
-
 LIST *list_create()
 {
 	LIST *new_list = malloc(sizeof(LIST));
-
 	new_list->front = NULL;
 	new_list->back = NULL;
 	return new_list;
@@ -17,7 +15,6 @@ void list_free(LIST *list)
 {
 	NODE *temp = list->front;
 	NODE *temp_next;
-
 	while(temp != NULL) {
      	temp_next = temp->next;   
 		free(temp);
@@ -26,7 +23,7 @@ void list_free(LIST *list)
     	free(list);
 }
 
-void print_lst( LIST* list)
+/*void print_lst( LIST* list)
 {
 	NODE *p = list->front; 
 	while( p != NULL)
@@ -34,12 +31,11 @@ void print_lst( LIST* list)
 		printf("list hour: %i day: %i month %i year %i\n", p->hour, p->day, p->month, p->year); 
 		p = p->next; 
 	}
-}
+}*/
 
 void add_node( LIST* list , int val_month, int val_day, int val_year, int val_hour ) 
 {
 	NODE *temp_node;
-
 	if( list->back == NULL)
 	{
 		temp_node = malloc(sizeof(NODE));
@@ -52,7 +48,6 @@ void add_node( LIST* list , int val_month, int val_day, int val_year, int val_ho
 		list->back = temp_node;
 		return;
 	}
-
 	temp_node = malloc(sizeof(NODE));
 	temp_node->month = val_month;
 	temp_node->day = val_day; 
@@ -61,27 +56,27 @@ void add_node( LIST* list , int val_month, int val_day, int val_year, int val_ho
 	temp_node->next = NULL;
 	list->back->next=temp_node;
 	list->back = temp_node;
-
 }
   	
 
-void count_node( LIST *list, int *count_array, char *type)
+void count_nodes( LIST *list, int *count_array, int type)
 {
 	NODE *p = list->front;
 	while(p != NULL) 
 	{
-	 	if(!(strcmp(type, "day"))==0)
+	 	if(type == 12)
+	 	{
+			count_array[p->month -1]++;
+	 	}	
+	 	else if(type == 24)
 	 	{
 			count_array[p->hour]++;
-	 	}	
-	 	else if(!(strcmp(type, "month"))==0)
+		}	
+		 else 
 	 	{
 			count_array[p->day - 1]++;
-		}	
-		 else if(!(strcmp(type, "year"))==0)
-	 	{
-			count_array[p->month - 1]++;
-	 	}	  
+	 	}
+	p = p->next;	  
 	}
 }	
 	

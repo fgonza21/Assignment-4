@@ -8,7 +8,7 @@
 #include <ctype.h>
 #include <plot.h>
 #include <time.h>
-#include "htst.h"
+#include "histogram.h"
 
 #define MONTHS 12
 int calc_max(int data[], int numdata){
