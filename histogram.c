@@ -113,13 +113,11 @@ int make_hist(int data[], int numdata, int month, int day, int year)
     int max_rides=0;
     if(numdata > 24){
         inc = d;
-	//pl_ffontsize(0.4);
 	type="days of the month.";
     }
     else if(numdata == 24){
         inc = h;
-	//pl_ffontsize(0.4);
-	type="hours of the day: d/%d/%d", month, day, year;
+	type="hours of the day.";
     }
    else if(numdata == 12){
         inc = m;
