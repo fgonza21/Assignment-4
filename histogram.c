@@ -75,8 +75,15 @@ void draw_rect(double rides, double incrmt, char *lbl, double max, int numdata)
 	exit(0);
     }
     pl_fbox(coord_start, 4.75, coord_end, height+4.75);
-    pl_fmove(coord_start,4.25);
-    pl_alabel('l','l',lbl);
+    pl_fmove(coord_start,4.35);
+    if(numdata != 12){
+      pl_ffontsize(.17);
+      pl_alabel('1','1',lbl);
+      pl_ffontsize(.22);
+    }
+    else{
+      pl_alabel('l','l',lbl);
+    }
     pl_fline(1.0,4.75,1.0,10.5);	 
     pl_fline(1.0,4.75,7.5,4.75);
 }
@@ -113,15 +120,15 @@ int make_hist(int data[], int numdata, int month, int day, int year)
     int max_rides=0;
     if(numdata > 24){
         inc = d;
-	type="days of the month.";
+	type="days of the month:";
     }
     else if(numdata == 24){
         inc = h;
-	type="hours of the day.";
+	type="hours of the day:";
     }
    else if(numdata == 12){
         inc = m;
-	type="months of the year.";
+	type="months of the year:";
     }
    else{
         fprintf(stderr, "Invalid flag.\n\n");
@@ -132,7 +139,7 @@ int make_hist(int data[], int numdata, int month, int day, int year)
     pl_parampl("BG_COLOR", "Mint Cream");
     
     FILE *file=fopen("divvy.gif","w");
-    if ((handle = pl_newpl ("gif", stdin,file, stderr)) < 0)
+    if ((handle = pl_newpl ("gif", stdin, file, stderr)) < 0)
     {
         fprintf (stderr, "Couldn't create Plotter\n");
         return 1;
@@ -157,14 +164,22 @@ int make_hist(int data[], int numdata, int month, int day, int year)
 	    draw_rect((double)data[i]/(double)j,(double)i + 1.0,inc[i],(double)max_rides,numdata);
     	}
     }
-    pl_fmove(1.0,4.75);
+    pl_fmove(.75,4.75);
     for(int i=1;i<=10;i++){
         pl_fmove(1.0,4.75+i*(5.75/10));
 	sprintf(&buf[0],"%d%c",(max_rides/10)*i,'\0');
 	pl_alabel('r','r',buf);
     }
-    sprintf(buf,"Histogram for %s.%c",type,'\0');
-    pl_fmove(3.0,10.5);
+    if (numdata == 12){
+      sprintf(buf, "Histogram for %s %d.%c", type, year, '\0');
+    }
+    else if (numdata == 24){
+      sprintf(buf, "Histogram for %s %d/%d/%d.%c", type, month, day, year, '\0');
+    }
+    else{
+      sprintf(buf, "Histogram for %s %d/%d.%c", type, month, year, '\0');
+    }
+    pl_fmove(2.5,10.75);
     pl_alabel('l','l',buf);
     dump_stat_box(data,numdata);
     if (pl_closepl () < 0) 
