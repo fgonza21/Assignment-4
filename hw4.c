@@ -7,24 +7,23 @@
 #define STR_LEN 256
 
 void read_by_day(FILE *file, LIST *list, int month, int day, int year){
-	char buffer[STR_LEN];
-	char tok_buff[STR_LEN];
-	char *token;
-	while(!feof(file)){
-	  fgets(buffer, STR_LEN, file);
-	  strcpy(tok_buff, buffer);
-	  token = strtok(tok_buff,"/");
-	  if(month == atoi(token)){
-	    token = strtok(NULL, "/");
-	    if(day == atoi(token)){
-		  token = strtok(NULL, " ");
-		  if(year == atoi(token)){
-		    token = strtok(NULL, ":");
-		    add_node(list, month, day, year, atoi(token));
-		  }
-		}
-	  }
+  char buffer[STR_LEN];
+  char tok_buff[STR_LEN];
+  char *token;
+  while(fgets(buffer, STR_LEN, file) != NULL){
+    strcpy(tok_buff, buffer);
+    token = strtok(tok_buff, "/");
+    if(month == atoi(token)){
+      token = strtok(NULL, "/");
+      if(day == atoi(token)){
+        token = strtok(NULL, " ");
+        if(year == atoi(token)){
+          token = strtok(NULL, ":");
+          add_node(list, month, day, year, atoi(token));
+        }
+      }
     }
+  }
 }
 
 void read_by_month(FILE *file, LIST *list, int month, int year){
@@ -33,7 +32,6 @@ void read_by_month(FILE *file, LIST *list, int month, int year){
 	char *token;
 	int day;
 	while(fgets(buffer, STR_LEN, file) != NULL){
-		fgets(buffer, STR_LEN, file);
 		strcpy(tok_buff, buffer);
 		token = strtok(tok_buff, "/");
 		if(month == atoi(token)){
@@ -53,7 +51,6 @@ void read_by_year(FILE *file, LIST *list, int year){
 	char *token;
 	int month;
 	while(fgets(buffer, STR_LEN, file) != NULL){
-		fgets(buffer, STR_LEN, file);
 		strcpy(tok_buff, buffer);
 		token = strtok(tok_buff, "/");
 		month = atoi(token);
@@ -117,8 +114,8 @@ int main(void){
 	  exit(0);
 	}
 	read_by_day(data_file, data, month, day, year);
-  	//count_nodes(data, counts, len);
-	//make_hist(counts, len);
+  	count_nodes(data, counts, len);
+	make_hist(counts, len, month, day, year);
 }
   
   if(!strcmp(analysis, "month")){
@@ -149,7 +146,7 @@ int main(void){
 	}
 	read_by_month(data_file, data, month, year);
   	count_nodes(data, counts, len);
-	make_hist(counts, len);
+	make_hist(counts, len, month, day, year);
 }
   
   if(!strcmp(analysis, "year")){
@@ -162,7 +159,7 @@ int main(void){
 	}
 	read_by_year(data_file, data, year);
 	count_nodes(data, counts, len);
-	make_hist(counts, len);
+	make_hist(counts, len, month, day, year);
   }
   list_free(data);
   return 0;

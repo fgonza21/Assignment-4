@@ -74,7 +74,7 @@ void count_nodes( LIST *list, int *count_array, int type)
 		}	
 		 else 
 	 	{
-			count_array[p->day - 1]++;
+		  	count_array[p->day - 1]++;
 	 	}
 	p = p->next;	  
 	}
