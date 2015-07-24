@@ -1,8 +1,17 @@
+/*
+ * list.c: This file is used as Abstract Data Type (ADT) for the user
+ * program 
+*/
+
 #include <stdio.h>
 #include <stdlib.h> 
 #include <string.h>
 #include "list.h"
 
+/*
+ *    function:  list_create  
+ *     description: returns pointer to newly created empty list
+*/
 LIST *list_create()
 {
 	LIST *new_list = malloc(sizeof(LIST));
@@ -11,6 +20,11 @@ LIST *list_create()
 	return new_list;
 }	
 
+/*
+ *    function:  list_free  
+ *    parameter: LIST *list
+ *    description: dellocates the meonory associated with the list 
+*/
 void list_free(LIST *list)
 {
 	NODE *temp = list->front;
@@ -23,15 +37,14 @@ void list_free(LIST *list)
     	free(list);
 }
 
-/*void print_lst( LIST* list)
-{
-	NODE *p = list->front; 
-	while( p != NULL)
-	{
-		printf("list hour: %i day: %i month %i year %i\n", p->hour, p->day, p->month, p->year); 
-		p = p->next; 
-	}
-}*/
+
+/* 	function: add_node
+ *  	parameters: LIST* list , int val_month, int val_day, int val_year, int val_hour
+ *  	description: adds a node to the list with vraibles that represent the 
+ * 		month, day, year and hour which the user program specifies though 
+ * 		providing the vriables in the parameters. 
+ * 
+*/
 
 void add_node( LIST* list , int val_month, int val_day, int val_year, int val_hour ) 
 {
@@ -58,7 +71,13 @@ void add_node( LIST* list , int val_month, int val_day, int val_year, int val_ho
 	list->back = temp_node;
 }
   	
-
+/*
+ *    function:  count_nodes
+ *    parameters:  LIST *list, int *count_array, int type
+ *    description:  Counts number of occurrences 
+ *     		of type (month, day, year, hour) in the list and returns 
+ *     		that value.
+*/
 void count_nodes( LIST *list, int *count_array, int type)
 {
 	NODE *p = list->front;
@@ -79,7 +98,13 @@ void count_nodes( LIST *list, int *count_array, int type)
 	p = p->next;	  
 	}
 }	
-	
+
+/*
+ *    function:  free_node 
+ *    parameters:  NODE *node
+ *    description:  Deallocates all the nodes in the list 
+ *     and the list itself by calling the free. 
+*/	
 void free_node(NODE *node)
 {
 	while(node != NULL)

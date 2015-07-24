@@ -1,3 +1,7 @@
+/*
+ * CS211 Assignment 4 Use of libplot to graphically represent data 
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -5,6 +9,12 @@
 #include "histogram.h"
 
 #define STR_LEN 256
+
+/*
+ *Parameters: filestream containing data, singly linked list, integer for the month, integer for the day, integer for the year
+ *Returns:    Nothing
+ *Reads in the values from the filestream that match the day provided by the user and store the data in the linked list
+ */
 
 void read_by_day(FILE *file, LIST *list, int month, int day, int year){
   char buffer[STR_LEN];
@@ -26,6 +36,12 @@ void read_by_day(FILE *file, LIST *list, int month, int day, int year){
   }
 }
 
+/*
+ *Parameters: filestream containing data, singly linked list, integer for the month, integer for the year
+ *Return:    None
+ *Reads in the values from the filestream that match the month provided by the user and store the data in the linked list
+ */
+
 void read_by_month(FILE *file, LIST *list, int month, int year){
 	char buffer[STR_LEN];
 	char tok_buff[STR_LEN];
@@ -45,6 +61,12 @@ void read_by_month(FILE *file, LIST *list, int month, int year){
 	}
 }
 
+/*
+ *Parameters: filestream containing data, singly linked list, integer for the year
+ *Return:    None
+ *Reads in the values from the filestream that match the year provided by the user and store the data in the linked list
+ */
+
 void read_by_year(FILE *file, LIST *list, int year){
 	char buffer[STR_LEN];
 	char tok_buff[STR_LEN];
@@ -61,6 +83,12 @@ void read_by_year(FILE *file, LIST *list, int year){
 		}	
 	}
 }
+
+/*
+ *Paramaters: None
+ *Return:    None
+ *Prompts the user for the data repository and the type of data analyses the user prefers.  Also does error checking on the values entered by the user.  
+ */
 
 int main(void){
 	int counts[31];
@@ -132,15 +160,19 @@ int main(void){
 	  fprintf(stderr, "Invalid Entry\n");
 	  exit(0);
 	}
+	//setting value for months with 31 days
 	if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12){
 		len = 31;
 	}
+	//setting value for months with 30 days
 	else if (month == 4 || month == 6 || month == 9 || month == 11){
 		len = 30;
 	}
+	//setting value for February in a leap year
 	else if (month == 2 && year%4 == 0){
 		len = 29;
 	}
+	//setting value for non-leap year February
 	else{
 		len = 28;
 	}

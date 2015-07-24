@@ -9,7 +9,7 @@
 #include <plot.h>
 #include <time.h>
 
-int calc_max(int data[], int numdata){
+int calc_max(int data[], int numdata){ //Gets the maximum value in the array
 	int i=0;
 	int max=data[0];
 	for(i=1;i<numdata;i++){
@@ -17,7 +17,7 @@ int calc_max(int data[], int numdata){
 	}
 	return max;
 }
-int calc_min(int data[], int numdata){
+int calc_min(int data[], int numdata){ //Gets the minimum value in the array
 	int i=0;
 	int min=data[0];
 	for(i=1;i<numdata;i++){
@@ -25,7 +25,7 @@ int calc_min(int data[], int numdata){
 	}
 	return min;
 }
-int calc_mean(int data[], int numdata){
+int calc_mean(int data[], int numdata){ //Calculates the mean value of the data in the array
 	int i=0;
 	int sum=0;
 	int mean=0;
@@ -34,7 +34,7 @@ int calc_mean(int data[], int numdata){
 	mean = sum/numdata;
 	return mean;
 }
-int cmp(const void *x, const void *y){
+int cmp(const void *x, const void *y){ //Comparison function for qsort call in median function
 	if(*(int *)x > *(int *)y)
 		return 1;
 	if(*(int *)x<*(int *)y)
@@ -42,7 +42,7 @@ int cmp(const void *x, const void *y){
 	if(*(int *)x==*(int *)y)
 		return 0;
 }
-int calc_mdn(int data[], int numdata){
+int calc_mdn(int data[], int numdata){ //Calculates the median value of the data
 	int i=0;
         int median=0;
 	int dat_temp[numdata];
@@ -60,7 +60,7 @@ int calc_mdn(int data[], int numdata){
 		return median;
 	}
 }
-void draw_rect(double rides, double incrmt, char *lbl, double max, int numdata)
+void draw_rect(double rides, double incrmt, char *lbl, double max, int numdata) //Draws the bars of the histogram, and draws the axes
 {
     pl_fmove(1.0, 4.75);
     double coord_start = 1.0+(incrmt - 1.0) * (6.5/numdata);
@@ -87,25 +87,15 @@ void draw_rect(double rides, double incrmt, char *lbl, double max, int numdata)
     pl_fline(1.0,4.75,1.0,10.5);	 
     pl_fline(1.0,4.75,7.5,4.75);
 }
-void dump_stat_box(int data[], int numdata){
+void dump_stat_box(int data[], int numdata){ //Puts statistical information onto the display
 	char buf[200];
-        int stat=0;
-	stat=calc_mean(data,numdata);
-        sprintf(buf, "The mean value is: %d.\n%c",stat,'\0');    
-	pl_fmove(1.0,3.0);
-	pl_alabel('l','x',buf);
-	stat=calc_mdn(data,numdata);
-	sprintf(&buf[0], "The median value is: %d.\n%c",stat,'\0');
-	pl_fmove(1.0,2.75);
-	pl_alabel('l','x',buf);
-	stat=calc_min(data,numdata);
-        sprintf(&buf[0], "The minimum value is: %d.\n%c",stat,'\0');
-        pl_fmove(1.0,2.50);
-        pl_alabel('l','x',buf);
-	stat=calc_max(data,numdata);
-        sprintf(&buf[0], "The maximum value is: %d.\n%c",stat,'\0');
-        pl_fmove(1.0,2.25);
-        pl_alabel('l','x',buf);
+	int (*stat[4])(int *,int)={calc_mean, calc_mdn,calc_min,calc_max};
+        char *strs[4]={"mean", "median", "minimum", "maximum"};
+        for(int i=0;i<4;i++){
+                sprintf(buf, "The %s value is: %d.\n%c",strs[i],stat[i](data,numdata),'\0');
+                pl_fmove(1.0,3.0-(0.25)*i);
+                pl_alabel('l','x',buf);
+        }
 }
 int make_hist(int data[], int numdata, int month, int day, int year)
 {
@@ -118,6 +108,7 @@ int make_hist(int data[], int numdata, int month, int day, int year)
     int handle;
     int i;
     int max_rides=0;
+    /*Determine the category by which to display.*/
     if(numdata > 24){
         inc = d;
 	type="days of the month:";
@@ -134,11 +125,11 @@ int make_hist(int data[], int numdata, int month, int day, int year)
         fprintf(stderr, "Invalid flag.\n\n");
         exit(0);
     }            
+    /*Set the page attributes.*/
     pl_parampl ("PAGESIZE", "letter,xsize=8.5in,ysize=11in,xorigin=0in,yorigin=0in");
     pl_parampl("GIF_ITERATIONS", "0");
     pl_parampl("BG_COLOR", "Mint Cream");
-    
-    FILE *file=fopen("divvy.gif","w");
+    FILE *file=fopen("divvy.gif","w"); //Outputs the display to a file called divvy.gif
     if ((handle = pl_newpl ("gif", stdin, file, stderr)) < 0)
     {
         fprintf (stderr, "Couldn't create Plotter\n");
@@ -150,7 +141,7 @@ int make_hist(int data[], int numdata, int month, int day, int year)
         fprintf (stderr, "Couldn't open Plotter\n");
         return 1;
     }
-  
+  /*Calculate the maximum number of rides, set the drawing attributes, and draw each frame of the animation*/
     max_rides=calc_max(data,numdata);
     pl_fspace (0.0,0.0,8.5,11.0); 
     pl_flinewidth (0.009);       
@@ -165,11 +156,12 @@ int make_hist(int data[], int numdata, int month, int day, int year)
     	}
     }
     pl_fmove(.75,4.75);
-    for(int i=1;i<=10;i++){
+    for(int i=1;i<=10;i++){ //This is where the animation happens.
         pl_fmove(1.0,4.75+i*(5.75/10));
 	sprintf(&buf[0],"%d%c",(max_rides/10)*i,'\0');
 	pl_alabel('r','r',buf);
     }
+    /*Generate the title.*/
     if (numdata == 12){
       sprintf(buf, "Histogram for %s %d.%c", type, year, '\0');
     }
@@ -181,6 +173,12 @@ int make_hist(int data[], int numdata, int month, int day, int year)
     }
     pl_fmove(2.5,10.75);
     pl_alabel('l','l',buf);
+    pl_textangle(90);
+    pl_fmove(0.15,7.75);
+    pl_alabel('c','x',"Rides");
+    pl_textangle(0);
+    pl_fmove(4.0,3.75);
+    pl_alabel('c','c',type);
     dump_stat_box(data,numdata);
     if (pl_closepl () < 0) 
     {
@@ -194,7 +192,7 @@ int make_hist(int data[], int numdata, int month, int day, int year)
         fprintf (stderr, "Couldn't delete Plotter\n");
         return 1;
     }
-
+    fclose(file);
     return 0;
 }
 
