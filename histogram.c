@@ -111,15 +111,15 @@ int make_hist(int data[], int numdata, int month, int day, int year)
     /*Determine the category by which to display.*/
     if(numdata > 24){
         inc = d;
-	type="days of the month:";
+	type="Days of the Month";
     }
     else if(numdata == 24){
         inc = h;
-	type="hours of the day:";
+	type="Hours of the Day";
     }
    else if(numdata == 12){
         inc = m;
-	type="months of the year:";
+	type="Months of the Year";
     }
    else{
         fprintf(stderr, "Invalid flag.\n\n");
@@ -163,13 +163,13 @@ int make_hist(int data[], int numdata, int month, int day, int year)
     }
     /*Generate the title.*/
     if (numdata == 12){
-      sprintf(buf, "Histogram for %s %d.%c", type, year, '\0');
+      sprintf(buf, "Histogram for %s: %d.%c", type, year, '\0');
     }
     else if (numdata == 24){
-      sprintf(buf, "Histogram for %s %d/%d/%d.%c", type, month, day, year, '\0');
+      sprintf(buf, "Histogram for %s: %d/%d/%d.%c", type, month, day, year, '\0');
     }
     else{
-      sprintf(buf, "Histogram for %s %d/%d.%c", type, month, year, '\0');
+      sprintf(buf, "Histogram for %s: %d/%d.%c", type, month, year, '\0');
     }
     pl_fmove(2.5,10.75);
     pl_alabel('l','l',buf);
